@@ -7,7 +7,7 @@
     "type": "git",
     "url": "https://github.com/arjunkshah12345-hash/tokenmaxx.git"
   },
-  "homepage": "https://tokenmaxx.vercel.app",
+  "homepage": "https://tokenmaxx-six.vercel.app",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

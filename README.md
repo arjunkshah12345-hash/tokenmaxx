@@ -10,7 +10,7 @@
 </p>
 
 <p align="center">
-  <a href="https://tokenmaxx.vercel.app">Live</a> ·
+  <a href="https://tokenmaxx-six.vercel.app">Live</a> ·
   <a href="#run-locally">Run locally</a> ·
   <a href="CONTRIBUTING.md">Contribute</a> ·
   <a href="LICENSE">MIT</a>
