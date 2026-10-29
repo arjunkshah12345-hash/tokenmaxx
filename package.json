@@ -1,0 +1,11 @@
+{
+  "name": "tokenmaxx-dither",
+  "private": true,
+  "type": "commonjs",
+  "dependencies": {
+    "@vercel/blob": "^2.0.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

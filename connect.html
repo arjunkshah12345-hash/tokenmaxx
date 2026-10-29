@@ -1,0 +1,38 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Connect · TOKENMAXX</title><meta name="description" content="The leaderboard for using the most tokens. Real burn from real people.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 18'%3E%3Crect width='18' height='18' fill='%230b0b0c'/%3E%3Crect width='4' height='4' fill='%23e8e8e5'/%3E%3Crect x='7' y='7' width='4' height='4' fill='%23e8e8e5'/%3E%3Crect x='14' y='14' width='4' height='4' fill='%23e8a64a'/%3E%3C/svg%3E">
+<link rel="preload" href="/assets/fonts/host-grotesk-latin-500-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/css/tokens.css"><link rel="stylesheet" href="/assets/css/site.css"></head><body>
+<a class="skip" href="#main">Skip to content</a><div class="rails" aria-hidden="true"></div>
+<header class="top"><div class="wrap topin">
+<a class="logo" href="/"><span class="mark" aria-hidden="true"></span>TOKENMAXX</a>
+<nav id="nav" aria-label="Primary"><a href="/board">Board</a><a href="/connect" aria-current="page">Connect</a><a href="/connect#how">How it counts</a></nav>
+<a class="mb join" href="/connect">Get on the board</a>
+<button class="mb o menu" type="button" aria-expanded="false" aria-controls="nav">Menu</button>
+<a class="gh" href="https://github.com/arjunkshah12345-hash/tokenmaxx" aria-label="GitHub repository" rel="noopener"><svg viewBox="0 0 16 16" width="20" height="20" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"/></svg></a>
+</div></header><main id="main">
+<section class="hdr"><div class="wrap"><span class="lab">Connect</span><h1>Get on the board</h1>
+<p class="lede">Install SuperCompress. When your account starts burning tokens, a row appears on the board with tokens passed and tokens compressed. No handle claim, no link step.</p></div></section>
+<section class="sec" style="margin-top:40px"><span class="x xl" aria-hidden="true"></span><span class="x xr" aria-hidden="true"></span><div class="wrap"><span class="lab">Two steps</span><ol class="steps" style="margin-top:16px">
+<li><h3>Install SuperCompress</h3><p style="color:var(--tx2);margin:6px 0 12px">One command. It detects your coding agents and wires them up. Your SuperCompress account is your board identity.</p>
+<div class="cmd"><code class="mono">npx -y supercompress-proxy setup</code><button class="mb o sm" type="button" data-copy="setupCmd" id="copySetup">Copy</button></div>
+<code class="mono" id="setupCmd" hidden>npx -y supercompress-proxy setup</code>
+<p class="lab" style="margin:16px 0 8px">Works with</p><div class="harn"><span class="tag">Cursor</span><span class="tag">Claude Code</span><span class="tag">Codex</span><span class="tag">Claude Desktop</span><span class="tag">Windsurf</span><span class="tag">Cline</span><span class="tag">Roo Code</span><span class="tag">Kilo Code</span><span class="tag">Continue</span><span class="tag">Zed</span><span class="tag">Goose</span><span class="tag">OpenCode</span><span class="tag">Gemini CLI</span><span class="tag">Grok</span><span class="tag">Hermes</span><span class="tag">OpenClaw</span><span class="tag">FreeBuff</span><span class="tag">Aider</span><span class="tag">OpenHands</span><span class="tag">Amazon Q</span><span class="tag">JetBrains AI</span><span class="tag">Copilot CLI</span><span class="tag">Warp</span><span class="tag">Trae</span><span class="tag">Augment</span><span class="tag">Antigravity</span><span class="tag">Devin</span><span class="tag">Crush</span><span class="tag">Pi</span><span class="tag">and more</span></div></li>
+<li><h3>Keep using it</h3><p style="color:var(--tx2);margin:6px 0 12px">TOKENMAXX syncs SuperCompress accounts every few minutes. New accounts with usage show up on their own. No handle to claim, no link command.</p>
+<p class="status" role="status">Board: <a href="/board">tokenmaxx.supercompress.dev/board</a></p></li></ol>
+</div></section>
+<section class="sec" id="how"><span class="x xl" aria-hidden="true"></span><span class="x xr" aria-hidden="true"></span><div class="wrap"><span class="lab">How it counts</span><h2 style="margin-bottom:24px">Totals only. From SuperCompress.</h2>
+<ul class="steps">
+<li>Tokens passed: tokens that went into SuperCompress from your coding agents.</li>
+<li>Tokens compressed: tokens SuperCompress removed (passed minus kept).</li>
+<li>Each SuperCompress account maps to one board handle, derived from the account. No separate claim step.</li>
+<li>Past days count on that UTC day. Live growth between syncs counts in the hour it is seen, so hourly stays honest.</li>
+<li>Hourly / daily / weekly / monthly windows are UTC and reset on the clock.</li></ul></div></section><section class="sec sc" aria-label="SuperCompress"><span class="x xl" aria-hidden="true"></span><span class="x xr" aria-hidden="true"></span><div class="wrap scin">
+<canvas class="tband" data-tier="0" aria-hidden="true"></canvas>
+<div><span class="lab" style="color:var(--sig)">SuperCompress</span><h2>Burning tokens?</h2><p class="lede" style="margin-top:12px">SuperCompress keeps only the context that answers the question.</p></div>
+<div><a class="mb" href="https://supercompress.dev" rel="noopener">Try SuperCompress</a></div></div></section></main><div class="hatch" aria-hidden="true"></div><footer class="foot"><div class="wrap footin">
+<div><a class="logo" href="/"><span class="mark" aria-hidden="true"></span>TOKENMAXX</a>
+<p style="color:var(--tx2);margin-top:10px;max-width:52ch">The leaderboard for using the most tokens. Open source. Counts come from SuperCompress accounts automatically.</p></div>
+<nav aria-label="Footer"><a href="https://github.com/arjunkshah12345-hash/tokenmaxx" rel="noopener">GitHub</a><a href="/board">Board</a><a href="/connect">Connect</a><a href="https://supercompress.dev" rel="noopener">SuperCompress</a></nav>
+</div></footer><script src="/assets/js/dither.js"></script><script src="/assets/js/app.js"></script>
+<script>(function(){var b=document.getElementById("copySetup");if(!b)return;b.addEventListener("click",function(){navigator.clipboard.writeText("npx -y supercompress-proxy setup").then(function(){b.textContent="Copied"},function(){b.textContent="Select and copy"})})})</script></body></html>

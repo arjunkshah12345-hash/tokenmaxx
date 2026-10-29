@@ -1,0 +1,78 @@
+/**
+ * POST/GET /api/sync-sc — pull every SuperCompress human with usage onto the board.
+ * Auth: Authorization: Bearer <CRON_SECRET or TMX_SYNC_SECRET>
+ * Vercel Cron hits this so new SC accounts appear without claiming a handle.
+ */
+const S = require("../lib/store");
+const { listTaken, upsertFromAuthUser, isHuman } = require("../lib/accounts");
+const { monthKey } = require("../lib/days");
+const { listAllUsers } = require("../lib/firebase-auth");
+
+function authorized(req) {
+  const want = String(process.env.CRON_SECRET || process.env.TMX_SYNC_SECRET || "").trim();
+  if (!want) return false;
+  const auth = String(req.headers.authorization || "");
+  // Vercel Cron also sends x-vercel-cron: 1 on Hobby+/Pro
+  if (auth === `Bearer ${want}`) return true;
+  if (req.headers["x-vercel-cron"] === "1" && want) return true;
+  return false;
+}
+
+module.exports = async (req, res) => {
+  // Allow longer runs for full Auth scan + blob writes
+  if (typeof res.setHeader === "function") {
+    try {
+      // hint only; maxDuration set in vercel.json
+    } catch (_) {}
+  }
+  if (req.method === "OPTIONS") return S.json(res, 204, {});
+  if (req.method !== "GET" && req.method !== "POST") {
+    return S.json(res, 405, { error: "GET or POST" });
+  }
+  if (!authorized(req)) return S.json(res, 401, { error: "Unauthorized" });
+  if (!process.env.FIREBASE_SERVICE_ACCOUNT_JSON) {
+    return S.json(res, 503, { error: "FIREBASE_SERVICE_ACCOUNT_JSON missing" });
+  }
+  if (!process.env.SC_USAGE_SHARE_SECRET || process.env.SC_USAGE_SHARE_SECRET.length < 32) {
+    return S.json(res, 503, { error: "SC_USAGE_SHARE_SECRET missing" });
+  }
+
+  const started = Date.now();
+  const month = monthKey();
+  const stats = { scanned: 0, humans: 0, created: 0, updated: 0, skipped: 0, errors: [] };
+  try {
+    const taken = await listTaken(S);
+    for await (const page of listAllUsers()) {
+      for (const user of page) {
+        stats.scanned += 1;
+        if (!isHuman(user)) continue;
+        stats.humans += 1;
+        try {
+          const r = await upsertFromAuthUser(S, user, taken, month);
+          if (r.status === "created") stats.created += 1;
+          else if (r.status === "updated") stats.updated += 1;
+          else stats.skipped += 1;
+        } catch (err) {
+          stats.errors.push(String(user.uid || "").slice(0, 12) + ":" + (err.message || err));
+          if (stats.errors.length > 25) break;
+        }
+      }
+      if (stats.errors.length > 25) break;
+      // Stay under serverless wall clock; resume next cron if needed
+      if (Date.now() - started > 250000) {
+        stats.truncated = true;
+        break;
+      }
+    }
+
+    return S.json(res, 200, {
+      ok: true,
+      month,
+      ms: Date.now() - started,
+      ...stats,
+      errors: stats.errors.slice(0, 10),
+    });
+  } catch (err) {
+    return S.json(res, 500, { error: err.message || "sync failed" });
+  }
+};
