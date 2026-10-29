@@ -1,5 +1,5 @@
 /**
- * POST/GET /api/sync-sc — pull every SuperCompress human with usage onto the board.
+ * POST/GET /api/sync-sc — put every existing SuperCompress account on the board (idle ones at zero).
  * Auth: Authorization: Bearer <CRON_SECRET or TMX_SYNC_SECRET>
  * Vercel Cron hits this so new SC accounts appear without claiming a handle.
  */
@@ -42,20 +42,24 @@ module.exports = async (req, res) => {
   const stats = { scanned: 0, humans: 0, created: 0, updated: 0, skipped: 0, errors: [] };
   try {
     const taken = await listTaken(S);
+    const one = async (user) => {
+      try {
+        const r = await upsertFromAuthUser(S, user, taken, month);
+        if (r.status === "created") stats.created += 1;
+        else if (r.status === "updated") stats.updated += 1;
+        else stats.skipped += 1;
+      } catch (err) {
+        stats.errors.push(String(user.uid || "").slice(0, 12) + ":" + (err.message || err));
+      }
+    };
     for await (const page of listAllUsers()) {
-      for (const user of page) {
-        stats.scanned += 1;
-        if (!isHuman(user)) continue;
-        stats.humans += 1;
-        try {
-          const r = await upsertFromAuthUser(S, user, taken, month);
-          if (r.status === "created") stats.created += 1;
-          else if (r.status === "updated") stats.updated += 1;
-          else stats.skipped += 1;
-        } catch (err) {
-          stats.errors.push(String(user.uid || "").slice(0, 12) + ":" + (err.message || err));
-          if (stats.errors.length > 25) break;
-        }
+      const humans = page.filter(isHuman);
+      stats.scanned += page.length;
+      stats.humans += humans.length;
+      // 8 at a time keeps ~500 accounts inside one cron run
+      for (let i = 0; i < humans.length; i += 8) {
+        await Promise.all(humans.slice(i, i + 8).map(one));
+        if (stats.errors.length > 25 || Date.now() - started > 250000) break;
       }
       if (stats.errors.length > 25) break;
       // Stay under serverless wall clock; resume next cron if needed

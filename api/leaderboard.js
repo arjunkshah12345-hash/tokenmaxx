@@ -55,9 +55,14 @@ module.exports = async (req, res) => {
         lastSync: u.sc.polledAt,
       };
     })
-    // Only rank players with activity inside this window (not lifetime-only).
-    .filter((r) => r.passed > 0 || r.compressed > 0)
-    .sort((a, b) => b.tokens - a.tokens || b.passed - a.passed)
+    // Every SuperCompress account is a player; players idle in this window rank below by lifetime.
+    .sort(
+      (a, b) =>
+        b.tokens - a.tokens ||
+        b.passed - a.passed ||
+        b.lifetime.passed - a.lifetime.passed ||
+        a.handle.localeCompare(b.handle)
+    )
     .map((r, i) => Object.assign({ rank: i + 1 }, r));
   S.json(res, 200, {
     period,
