@@ -11,11 +11,9 @@ const { listAllUsers } = require("../lib/firebase-auth");
 function authorized(req) {
   const want = String(process.env.CRON_SECRET || process.env.TMX_SYNC_SECRET || "").trim();
   if (!want) return false;
-  const auth = String(req.headers.authorization || "");
-  // Vercel Cron also sends x-vercel-cron: 1 on Hobby+/Pro
-  if (auth === `Bearer ${want}`) return true;
-  if (req.headers["x-vercel-cron"] === "1" && want) return true;
-  return false;
+  // Vercel Cron sends Authorization: Bearer $CRON_SECRET. Headers like x-vercel-cron
+  // can be set by any caller, so the secret is the only thing trusted here.
+  return String(req.headers.authorization || "") === `Bearer ${want}`;
 }
 
 module.exports = async (req, res) => {

@@ -9,7 +9,7 @@ module.exports=async(req,res)=>{
   let j;try{j=await SC.fetchUsage(share)}catch(e){return S.json(res,e.status===401?401:502,{error:"SuperCompress did not accept that share token."})}
   const acct=String(j.account||"").replace(/[^a-f0-9]/g,"").slice(0,32);if(!acct)return S.json(res,502,{error:"No account ref from SuperCompress."});
   const ix="a/"+acct+".json",got=await S.list({prefix:ix,limit:1});
-  if(got.blobs[0]){const ref=await S.readBlob(got.blobs[0]);if(ref&&ref.handle!==u.handle)return S.json(res,409,{error:"That SuperCompress account is already linked to another handle."})}
+  if(got.blobs[0]){const ref=await S.readBlob(got.blobs[0]);if(ref&&ref.handle&&ref.handle!==u.handle)return S.json(res,409,{error:"That SuperCompress account is already linked to another handle."})}
   const fresh=!u.sc||u.sc.account!==acct;u.sc={account:acct,enc:SC.enc(share),linkedAt:new Date().toISOString(),last:fresh?null:u.sc.last};if(fresh)u.scb={};
   SC.apply(u,j.usage||{});await S.saveUser(u);
   await S.put(ix,JSON.stringify({handle:u.handle}),{access:"public",addRandomSuffix:false,allowOverwrite:true,contentType:"application/json"});

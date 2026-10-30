@@ -25,8 +25,12 @@ module.exports = async (req, res) => {
   if (!cache.users || now - cache.t > 15e3) {
     const blobs = await S.all();
     const users = (await Promise.all(blobs.map(S.readBlob))).filter(Boolean);
-    // Refresh a few linked accounts so live deltas land in the current hour.
-    const linked = users.filter((u) => u.sc && u.sc.enc).slice(0, 8);
+    // Refresh the 8 stalest linked accounts so live deltas rotate through everyone.
+    const polled = (u) => Date.parse(u.sc.polledAt || 0) || 0;
+    const linked = users
+      .filter((u) => u.sc && u.sc.enc)
+      .sort((a, b) => polled(a) - polled(b))
+      .slice(0, 8);
     await Promise.all(linked.map((u) => SC.refresh(u, S).catch(() => {})));
     cache = { t: now, users };
   }
